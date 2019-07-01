@@ -21,7 +21,6 @@ public class Main {
                 System.out.println("Specify all the arguments -owl, -d, -o");
                 return;
             }
-            System.out.println(datasetFile);
                 Model modelDataset = ModelFactory.createDefaultModel();
                 modelDataset.read(new File(datasetFile).toURI().toString(), "N-TRIPLE");
                 StmtIterator iteratorDataset;
@@ -29,14 +28,21 @@ public class Main {
                 Model modelOwl = ModelFactory.createDefaultModel();
                 modelOwl.read(new File(owlFile).toURI().toString(), "N-TRIPLE");
                 StmtIterator iteratorOwl = modelOwl.listStatements();
-                while (iteratorOwl.hasNext()) {
+
+                File file=new File(outputFile);
+                int i=0;
+                while (iteratorOwl.hasNext())
+                {
+                    i++;
                     Statement statementOwl = iteratorOwl.nextStatement();
                     Resource subjectOwl = statementOwl.getSubject(); //wikidata link
                     RDFNode objectOwl = statementOwl.getObject(); //osm or musicbrainz link
                     iteratorDataset = modelDataset.listStatements();
-                    while (iteratorDataset.hasNext()) {
+                    while (iteratorDataset.hasNext())
+                    {
                         Statement statementDataset = iteratorDataset.nextStatement();
-                        if (statementDataset.getSubject().equals(objectOwl.asResource())) {
+                        if (statementDataset.getSubject().equals(objectOwl.asResource()))
+                        {
                             Property property = statementDataset.getPredicate();
                             RDFNode object = statementDataset.getObject();
                             iteratorDataset.remove();
@@ -45,6 +51,7 @@ public class Main {
                             modelDataset.add(st);
                         }
                     }
+                    System.out.println("iteration: "+i);
                 }
                 OutputStream outputStream = new FileOutputStream(outputFile);
                 modelDataset.write(outputStream, "N-TRIPLE");
