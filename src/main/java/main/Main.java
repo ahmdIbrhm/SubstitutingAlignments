@@ -23,11 +23,11 @@ public class Main {
             }
             System.out.println(datasetFile);
                 Model modelDataset = ModelFactory.createDefaultModel();
-                modelDataset.read(datasetFile, "N-TRIPLE");
+                modelDataset.read(new File(datasetFile).toURI().toString(), "N-TRIPLE");
                 StmtIterator iteratorDataset;
 
                 Model modelOwl = ModelFactory.createDefaultModel();
-                modelOwl.read(owlFile, "N-TRIPLE");
+                modelOwl.read(new File(owlFile).toURI().toString(), "N-TRIPLE");
                 StmtIterator iteratorOwl = modelOwl.listStatements();
                 while (iteratorOwl.hasNext()) {
                     Statement statementOwl = iteratorOwl.nextStatement();
