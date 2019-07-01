@@ -21,6 +21,7 @@ public class Main {
                 System.out.println("Specify all the arguments -owl, -d, -o");
                 return;
             }
+            System.out.println(datasetFile);
                 Model modelDataset = ModelFactory.createDefaultModel();
                 modelDataset.read(datasetFile, "N-TRIPLE");
                 StmtIterator iteratorDataset;
