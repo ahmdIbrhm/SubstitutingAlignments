@@ -2,8 +2,19 @@ package main;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
+import org.apache.jena.graph.Triple;
 import org.apache.jena.rdf.model.*;
+import org.apache.jena.riot.lang.PipedRDFIterator;
+import org.apache.jena.graph.Triple;
+import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.riot.lang.PipedRDFIterator;
+import org.apache.jena.riot.lang.PipedRDFStream;
+import org.apache.jena.riot.lang.PipedTriplesStream;
+import parser.Parser;
+
 import java.io.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Main {
     @Parameter(names={"--owlFile", "-owl"})
@@ -63,11 +74,13 @@ public class Main {
         }
     }
     public static void main(String[] argv) throws Exception{
-        Main main = new Main();
-        JCommander.newBuilder()
-                .addObject(main)
-                .build()
-                .parse(argv);
-        main.run();
+//        Main main = new Main();
+//        JCommander.newBuilder()
+//                .addObject(main)
+//                .build()
+//                .parse(argv);
+//        main.run();
+        Parser parser=new Parser();
+        PipedRDFIterator<Triple> iterator=parser.parse("dataset.nt");
     }
 }
