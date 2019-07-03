@@ -17,8 +17,8 @@ public class Main {
     public void run() throws Exception {
         try {
             if(owlFile!=null && datasetFile!=null && outputFile!=null ) {
-                BufferedWriter writer = new BufferedWriter(new FileWriter("newFile"));
-                BufferedReader readerDataset = new BufferedReader(new FileReader("dataset.nt"));
+                BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
+                BufferedReader readerDataset = new BufferedReader(new FileReader(datasetFile));
                 String lineDataset;
                 while ((lineDataset = readerDataset.readLine()) != null) {
                     String[] tripleDataset = lineDataset.split(" ");
@@ -26,7 +26,7 @@ public class Main {
                     String predicateDataset = tripleDataset[1];
                     String objectDataset = tripleDataset[2];
                     boolean found = false;
-                    BufferedReader readerOwl = new BufferedReader(new FileReader("owl.nt"));
+                    BufferedReader readerOwl = new BufferedReader(new FileReader(owlFile));
                     String lineOwl;
                     while ((lineOwl = readerOwl.readLine()) != null) {
                         String[] tripleOwl = lineOwl.split(" ");
