@@ -9,6 +9,7 @@ import org.rdfhdt.hdt.enums.TripleComponentRole;
 import org.rdfhdt.hdt.hdt.HDT;
 import org.rdfhdt.hdt.hdt.HDTManager;
 import org.rdfhdt.hdt.triples.IteratorTripleID;
+import org.rdfhdt.hdt.triples.IteratorTripleString;
 import org.rdfhdt.hdt.triples.TripleID;
 import org.rdfhdt.hdt.triples.Triples;
 import org.rdfhdt.hdtjena.NodeDictionary;
@@ -78,8 +79,7 @@ public class Main {
 //                .parse(argv);
 //        main.run();
         HDT hdt= HDTManager.mapIndexedHDT("owl.hdt",null);
-        System.out.println(hdt.getDictionary().idToString(0,TripleComponentRole.SUBJECT));
-//        Triples triples= hdt.getTriples();
-//        System.out.println(triples.getNumberOfElements());
+        IteratorTripleString iteratorTripleString= hdt.search("?","?","?");
+        System.out.println(iteratorTripleString.next());
     }
 }
