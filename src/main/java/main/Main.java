@@ -5,6 +5,9 @@ import com.beust.jcommander.Parameter;
 import org.apache.jena.graph.Node;
 import org.apache.jena.graph.Triple;
 import org.apache.jena.riot.lang.PipedRDFIterator;
+import org.rdfhdt.hdt.hdt.HDT;
+import org.rdfhdt.hdt.hdt.HDTManager;
+import org.rdfhdt.hdtjena.NodeDictionary;
 import parser.Parser;
 
 import java.io.*;
@@ -64,11 +67,14 @@ public class Main {
         }
     }
     public static void main(String[] argv) throws Exception {
-        Main main = new Main();
-        JCommander.newBuilder()
-                .addObject(main)
-                .build()
-                .parse(argv);
-        main.run();
+//        Main main = new Main();
+//        JCommander.newBuilder()
+//                .addObject(main)
+//                .build()
+//                .parse(argv);
+//        main.run();
+        HDT hdt= HDTManager.mapIndexedHDT("owl.hdt",null);
+        NodeDictionary nodeDictionary=new NodeDictionary(hdt.getDictionary());
+        System.out.println(nodeDictionary);
     }
 }
