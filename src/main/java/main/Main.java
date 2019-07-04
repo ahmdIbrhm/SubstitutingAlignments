@@ -24,7 +24,7 @@ public class Main {
             if (owlFile != null && datasetFile != null && outputFile != null)
             {
                 BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
-                PipedRDFIterator<Triple> iteratorDataset = Parser.parse("/home/ahmad/IdeaProjects/SubstitutingAlignments/dataset.nt");
+                PipedRDFIterator<Triple> iteratorDataset = Parser.parse(datasetFile);
                 while (iteratorDataset.hasNext()) {
                     Triple tripleDataset = iteratorDataset.next();
                     Node subjectDataset = tripleDataset.getSubject();
