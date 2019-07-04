@@ -1,6 +1,7 @@
 package main;
 
 
+import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import org.apache.jena.graph.Node;
 import org.apache.jena.graph.Triple;
@@ -8,10 +9,7 @@ import org.apache.jena.riot.lang.PipedRDFIterator;
 import org.rdfhdt.hdt.enums.TripleComponentRole;
 import org.rdfhdt.hdt.hdt.HDT;
 import org.rdfhdt.hdt.hdt.HDTManager;
-import org.rdfhdt.hdt.triples.IteratorTripleID;
-import org.rdfhdt.hdt.triples.IteratorTripleString;
-import org.rdfhdt.hdt.triples.TripleID;
-import org.rdfhdt.hdt.triples.Triples;
+import org.rdfhdt.hdt.triples.*;
 import org.rdfhdt.hdtjena.NodeDictionary;
 import parser.Parser;
 
@@ -39,11 +37,16 @@ public class Main {
                     Node objectDataset = tripleDataset.getObject();
                     Node predicateDataset = tripleDataset.getPredicate();
                     boolean found = false;
-                    PipedRDFIterator<Triple> iteratorOwl = Parser.parse(owlFile);
+
+                    HDT hdt= HDTManager.mapIndexedHDT("owl.hdt",null);
+                    System.out.println("ToString: "+subjectDataset.toString());
+                    System.out.println("GetName: "+subjectDataset.getName());
+                    IteratorTripleString iteratorOwl= hdt.search("","",subjectDataset.getName());
+
                     while (iteratorOwl.hasNext()) {
-                        Triple tripleOwl = iteratorOwl.next();
-                        Node subjectOwl = tripleOwl.getSubject();
-                        Node objectOwl = tripleOwl.getObject();
+                        TripleString tripleOwl = iteratorOwl.next();
+                        String subjectOwl = tripleOwl.getSubject().toString();
+                        String  objectOwl = tripleOwl.getObject().toString();
                         if (subjectDataset.equals(subjectOwl)) {
                             writer.write("<" + objectOwl + "> <" + predicateDataset + "> <" + objectDataset + "> .\n");
                             found = true;
@@ -72,14 +75,11 @@ public class Main {
         }
     }
     public static void main(String[] argv) throws Exception {
-//        Main main = new Main();
-//        JCommander.newBuilder()
-//                .addObject(main)
-//                .build()
-//                .parse(argv);
-//        main.run();
-        HDT hdt= HDTManager.mapIndexedHDT("owl.hdt",null);
-        IteratorTripleString iteratorTripleString= hdt.search("?","?","?");
-        System.out.println(iteratorTripleString.estimatedNumResults());
+        Main main = new Main();
+        JCommander.newBuilder()
+                .addObject(main)
+                .build()
+                .parse(argv);
+        main.run();
     }
 }
