@@ -80,6 +80,6 @@ public class Main {
 //        main.run();
         HDT hdt= HDTManager.mapIndexedHDT("owl.hdt",null);
         IteratorTripleString iteratorTripleString= hdt.search("?","?","?");
-        System.out.println(iteratorTripleString.next());
+        System.out.println(iteratorTripleString.estimatedNumResults());
     }
 }
