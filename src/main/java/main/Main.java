@@ -5,6 +5,7 @@ import com.beust.jcommander.Parameter;
 import org.apache.jena.graph.Node;
 import org.apache.jena.graph.Triple;
 import org.apache.jena.riot.lang.PipedRDFIterator;
+import org.rdfhdt.hdt.enums.TripleComponentRole;
 import org.rdfhdt.hdt.hdt.HDT;
 import org.rdfhdt.hdt.hdt.HDTManager;
 import org.rdfhdt.hdt.triples.IteratorTripleID;
@@ -77,9 +78,8 @@ public class Main {
 //                .parse(argv);
 //        main.run();
         HDT hdt= HDTManager.mapIndexedHDT("owl.hdt",null);
-        NodeDictionary nodeDictionary=new NodeDictionary(hdt.getDictionary());
-        System.out.println(nodeDictionary);
-        Triples triples= hdt.getTriples();
-        System.out.println(triples.getNumberOfElements());
+        System.out.println(hdt.getDictionary().idToString(0,TripleComponentRole.SUBJECT));
+//        Triples triples= hdt.getTriples();
+//        System.out.println(triples.getNumberOfElements());
     }
 }
