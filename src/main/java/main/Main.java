@@ -1,12 +1,15 @@
 package main;
 
-import com.beust.jcommander.JCommander;
+
 import com.beust.jcommander.Parameter;
 import org.apache.jena.graph.Node;
 import org.apache.jena.graph.Triple;
 import org.apache.jena.riot.lang.PipedRDFIterator;
 import org.rdfhdt.hdt.hdt.HDT;
 import org.rdfhdt.hdt.hdt.HDTManager;
+import org.rdfhdt.hdt.triples.IteratorTripleID;
+import org.rdfhdt.hdt.triples.TripleID;
+import org.rdfhdt.hdt.triples.Triples;
 import org.rdfhdt.hdtjena.NodeDictionary;
 import parser.Parser;
 
@@ -76,5 +79,7 @@ public class Main {
         HDT hdt= HDTManager.mapIndexedHDT("owl.hdt",null);
         NodeDictionary nodeDictionary=new NodeDictionary(hdt.getDictionary());
         System.out.println(nodeDictionary);
+        Triples triples= hdt.getTriples();
+        System.out.println(triples.getNumberOfElements());
     }
 }
