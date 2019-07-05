@@ -5,15 +5,18 @@ import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import org.apache.jena.graph.Node;
 import org.apache.jena.graph.Triple;
+import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.lang.PipedRDFIterator;
 import org.rdfhdt.hdt.enums.TripleComponentRole;
 import org.rdfhdt.hdt.hdt.HDT;
+import org.rdfhdt.hdt.hdt.HDTFactory;
 import org.rdfhdt.hdt.hdt.HDTManager;
 import org.rdfhdt.hdt.triples.*;
 import org.rdfhdt.hdtjena.NodeDictionary;
 import parser.Parser;
 
 import java.io.*;
+import java.util.HashMap;
 
 public class Main {
     @Parameter(names={"--owlFile", "-owl"})
@@ -29,6 +32,17 @@ public class Main {
         try {
             if (owlFile != null && datasetFile != null && outputFile != null)
             {
+                HashMap<String,String> owlHashmap=new HashMap<>();
+                PipedRDFIterator<Triple> iteratorOwl= Parser.parse(owlFile);
+                while (iteratorOwl.hasNext())
+                {
+                    Triple triple=iteratorOwl.next();
+                    Node subjectOwl=triple.getSubject();
+                    Node objectOwl=triple.getObject();
+                    owlHashmap.put(objectOwl.toString(),subjectOwl.toString());
+                }
+
+                System.out.println(owlHashmap);
                 BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
                 PipedRDFIterator<Triple> iteratorDataset = Parser.parse(datasetFile);
                 while (iteratorDataset.hasNext()) {
@@ -36,26 +50,21 @@ public class Main {
                     Node subjectDataset = tripleDataset.getSubject();
                     Node objectDataset = tripleDataset.getObject();
                     Node predicateDataset = tripleDataset.getPredicate();
-                    boolean found = false;
-
-                    HDT hdt= HDTManager.mapIndexedHDT(owlFile,null);
-                    System.out.println("ToString: "+subjectDataset.toString());
-                    IteratorTripleString iteratorOwl= hdt.search("","",subjectDataset.toString());
-                    while (iteratorOwl.hasNext()) {
-                        TripleString tripleOwl = iteratorOwl.next();
-                        String subjectOwl = tripleOwl.getSubject().toString();
-                        String  objectOwl = tripleOwl.getObject().toString();
-                        if (subjectDataset.equals(subjectOwl)) {
-                            writer.write("<" + objectOwl + "> <" + predicateDataset + "> <" + objectDataset + "> .\n");
-                            found = true;
-                            break;
-                        } else if (subjectDataset.equals(objectOwl)) {
-                            writer.write("<" + subjectOwl + "> <" + predicateDataset + "> <" + objectDataset + "> .\n");
-                            found = true;
-                            break;
-                        }
+//                    boolean found = false;
+                    if (owlHashmap.containsKey(subjectDataset.toString())) {
+                        writer.write("<" + owlHashmap.get(subjectDataset.toString())+ "> <" + predicateDataset + "> <" + objectDataset + "> .\n");
+                        System.out.println("asd");
+//                        found = true;
                     }
-                    if (found == false) {
+//                    else if (subjectDataset.equals(objectOwl)) {
+//                        writer.write("<" + subjectOwl + "> <" + predicateDataset + "> <" + objectDataset + "> .\n");
+//                        found = true;
+//                        break;
+//                    }
+//                    if (found == false) {
+//                        writer.write("<" + subjectDataset + "> <" + predicateDataset + "> <" + objectDataset + "> .\n");
+//                    }
+                    else {
                         writer.write("<" + subjectDataset + "> <" + predicateDataset + "> <" + objectDataset + "> .\n");
                     }
                 }
