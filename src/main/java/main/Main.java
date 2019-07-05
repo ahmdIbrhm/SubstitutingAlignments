@@ -40,9 +40,7 @@ public class Main {
 
                     HDT hdt= HDTManager.mapIndexedHDT("owl.hdt",null);
                     System.out.println("ToString: "+subjectDataset.toString());
-                    System.out.println("GetName: "+subjectDataset.getName());
-                    IteratorTripleString iteratorOwl= hdt.search("","",subjectDataset.getName());
-
+                    IteratorTripleString iteratorOwl= hdt.search("","",subjectDataset.toString());
                     while (iteratorOwl.hasNext()) {
                         TripleString tripleOwl = iteratorOwl.next();
                         String subjectOwl = tripleOwl.getSubject().toString();
