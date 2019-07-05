@@ -38,7 +38,7 @@ public class Main {
                     Node predicateDataset = tripleDataset.getPredicate();
                     boolean found = false;
 
-                    HDT hdt= HDTManager.mapIndexedHDT("owl.hdt",null);
+                    HDT hdt= HDTManager.mapIndexedHDT(owlFile,null);
                     System.out.println("ToString: "+subjectDataset.toString());
                     IteratorTripleString iteratorOwl= hdt.search("","",subjectDataset.toString());
                     while (iteratorOwl.hasNext()) {
