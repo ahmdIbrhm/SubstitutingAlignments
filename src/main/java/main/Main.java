@@ -30,6 +30,7 @@ public class Main {
 
     public void run() throws Exception {
         try {
+            int numberOfLinks=0;
             if (owlFile != null && datasetFile != null && outputFile != null)
             {
                 HashMap<String,String> owlHashmap=new HashMap<>();
@@ -50,25 +51,17 @@ public class Main {
                     Node subjectDataset = tripleDataset.getSubject();
                     Node objectDataset = tripleDataset.getObject();
                     Node predicateDataset = tripleDataset.getPredicate();
-//                    boolean found = false;
                     if (owlHashmap.containsKey(subjectDataset.toString())) {
+                        numberOfLinks++;
                         writer.write("<" + owlHashmap.get(subjectDataset.toString())+ "> <" + predicateDataset + "> <" + objectDataset + "> .\n");
-                        System.out.println("asd");
-//                        found = true;
                     }
-//                    else if (subjectDataset.equals(objectOwl)) {
-//                        writer.write("<" + subjectOwl + "> <" + predicateDataset + "> <" + objectDataset + "> .\n");
-//                        found = true;
-//                        break;
-//                    }
-//                    if (found == false) {
-//                        writer.write("<" + subjectDataset + "> <" + predicateDataset + "> <" + objectDataset + "> .\n");
-//                    }
                     else {
                         writer.write("<" + subjectDataset + "> <" + predicateDataset + "> <" + objectDataset + "> .\n");
                     }
                 }
                 System.out.println("Finished");
+                System.out.println("Number of substituted links: "+numberOfLinks);
+
                 writer.close();
                 System.exit(0);
             }
