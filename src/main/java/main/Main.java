@@ -46,14 +46,19 @@ public class Main {
                 System.out.println(owlHashmap);
                 BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
                 PipedRDFIterator<Triple> iteratorDataset = Parser.parse(datasetFile);
-                while (iteratorDataset.hasNext()) {
+                while (iteratorDataset.hasNext())
+                {
                     Triple tripleDataset = iteratorDataset.next();
                     Node subjectDataset = tripleDataset.getSubject();
                     Node objectDataset = tripleDataset.getObject();
                     Node predicateDataset = tripleDataset.getPredicate();
                     if (owlHashmap.containsKey(subjectDataset.toString())) {
                         numberOfLinks++;
-                        writer.write("<" + owlHashmap.get(subjectDataset.toString())+ "> <" + predicateDataset + "> <" + objectDataset + "> .\n");
+                        if(objectDataset.isURI())
+                            writer.write("<" + owlHashmap.get(subjectDataset.toString())+ "> <" + predicateDataset + "> <" + objectDataset+ "> .\n");
+                        else
+                            writer.write("<" + owlHashmap.get(subjectDataset.toString())+ "> <" + predicateDataset + "> " + objectDataset+ " .\n");
+
                     }
                     else {
                         writer.write("<" + subjectDataset + "> <" + predicateDataset + "> <" + objectDataset + "> .\n");
