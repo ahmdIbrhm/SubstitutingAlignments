@@ -52,6 +52,7 @@ public class Main {
                     Node subjectDataset = tripleDataset.getSubject();
                     Node objectDataset = tripleDataset.getObject();
                     Node predicateDataset = tripleDataset.getPredicate();
+                    System.out.println(objectDataset);
                     if (owlHashmap.containsKey(subjectDataset.toString())) {
                         numberOfLinks++;
                         if(objectDataset.isURI())
@@ -61,7 +62,10 @@ public class Main {
 
                     }
                     else {
-                        writer.write("<" + subjectDataset + "> <" + predicateDataset + "> <" + objectDataset + "> .\n");
+                        if(objectDataset.isURI())
+                            writer.write("<" + subjectDataset + "> <" + predicateDataset + "> <" + objectDataset + "> .\n");
+                        else
+                            writer.write("<" + subjectDataset + "> <" + predicateDataset + "> " + objectDataset+ " .\n");
                     }
                 }
                 System.out.println("Finished");
