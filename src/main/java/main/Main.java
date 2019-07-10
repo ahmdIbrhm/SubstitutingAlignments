@@ -19,8 +19,8 @@ import java.io.*;
 import java.util.HashMap;
 
 public class Main {
-    @Parameter(names={"--owlFile", "-owl"})
-    private String owlFile;
+    @Parameter(names={"--owlFiles", "-owl"})
+    private String owlFiles;
 
     @Parameter(names={"--datasetFile", "-d"})
     private String datasetFile;
@@ -31,19 +31,22 @@ public class Main {
     public void run() throws Exception {
         try {
             int numberOfLinks=0;
-            if (owlFile != null && datasetFile != null && outputFile != null)
+            if (owlFiles != null && datasetFile != null && outputFile != null)
             {
+                String[] owls = owlFiles.split(",");
                 HashMap<String,String> owlHashmap=new HashMap<>();
-                PipedRDFIterator<Triple> iteratorOwl= Parser.parse(owlFile);
-                while (iteratorOwl.hasNext())
+                for(int i=0;i<owls.length;i++)
                 {
-                    Triple triple=iteratorOwl.next();
-                    Node subjectOwl=triple.getSubject();
-                    Node objectOwl=triple.getObject();
-                    owlHashmap.put(objectOwl.toString(),subjectOwl.toString());
+                    PipedRDFIterator<Triple> iteratorOwl = Parser.parse(owls[i]);
+                    while (iteratorOwl.hasNext())
+                    {
+                        Triple triple = iteratorOwl.next();
+                        Node subjectOwl = triple.getSubject();
+                        Node objectOwl = triple.getObject();
+                        owlHashmap.put(objectOwl.toString(), subjectOwl.toString());
+                    }
                 }
-
-                System.out.println(owlHashmap);
+                System.out.println(owls.length);
                 BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
                 PipedRDFIterator<Triple> iteratorDataset = Parser.parse(datasetFile);
                 while (iteratorDataset.hasNext())
