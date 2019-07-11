@@ -29,18 +29,18 @@ public class Main {
     @Parameter(names={"--outputFile", "-o"})
     private String outputFile;
 
+    @Parameter(names={"--type", "-t"})
+    private String typeOfDataset;
+
     public void run() throws Exception {
         try {
-            int numberOfLinks=0;
-            if (owlFiles != null && datasetFile != null && outputFile != null)
-            {
+            int numberOfLinks = 0;
+            if (owlFiles != null && datasetFile != null && outputFile != null) {
                 String[] owls = owlFiles.split(",");
-                HashMap<String,String> owlHashmap=new HashMap<>();
-                for(int i=0;i<owls.length;i++)
-                {
+                HashMap<String, String> owlHashmap = new HashMap<>();
+                for (int i = 0; i < owls.length; i++) {
                     PipedRDFIterator<Triple> iteratorOwl = Parser.parse(owls[i]);
-                    while (iteratorOwl.hasNext())
-                    {
+                    while (iteratorOwl.hasNext()) {
                         Triple triple = iteratorOwl.next();
                         Node subjectOwl = triple.getSubject();
                         Node objectOwl = triple.getObject();
@@ -48,82 +48,73 @@ public class Main {
                     }
                 }
                 BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
-                PipedRDFIterator<Triple> iteratorDataset = Parser.parse(datasetFile);
-                while (iteratorDataset.hasNext())
-                {
-                    Triple tripleDataset = iteratorDataset.next();
-                    Node subjectDataset = tripleDataset.getSubject();
-                    Node objectDataset = tripleDataset.getObject();
-                    Node predicateDataset = tripleDataset.getPredicate();
+
+                if (typeOfDataset.equals("ntriples")) {
+                    PipedRDFIterator<Triple> iteratorDataset = Parser.parse(datasetFile);
+                    while (iteratorDataset.hasNext()) {
+                        Triple tripleDataset = iteratorDataset.next();
+                        Node subjectDataset = tripleDataset.getSubject();
+                        Node objectDataset = tripleDataset.getObject();
+                        Node predicateDataset = tripleDataset.getPredicate();
 //                    System.out.println(objectDataset);
-                    if (owlHashmap.containsKey(subjectDataset.toString())) {
-                        numberOfLinks++;
-                        if(objectDataset.isURI())
-                        {
-                            writer.write("<" + owlHashmap.get(subjectDataset.toString())+ "> <" + predicateDataset + "> <" + objectDataset+ "> .\n");
-                        }
-                        else if(objectDataset.isLiteral())
-                        {
-                            Utility utility=new Utility();
-                            String string =objectDataset.getLiteral().getValue().toString();
-                            Node nodeString=utility.createLiteral(string);
-                            String language=objectDataset.getLiteralLanguage();
-                            String dataType=objectDataset.getLiteralDatatypeURI();
+                        if (owlHashmap.containsKey(subjectDataset.toString())) {
+                            numberOfLinks++;
+                            if (objectDataset.isURI()) {
+                                writer.write("<" + owlHashmap.get(subjectDataset.toString()) + "> <" + predicateDataset + "> <" + objectDataset + "> .\n");
+                            } else if (objectDataset.isLiteral()) {
+                                Utility utility = new Utility();
+                                String string = objectDataset.getLiteral().getValue().toString();
+                                Node nodeString = utility.createLiteral(string);
+                                String language = objectDataset.getLiteralLanguage();
+                                String dataType = objectDataset.getLiteralDatatypeURI();
 
-                            if(!language.trim().equals(""))
-                            {
-                                writer.write("<" + subjectDataset + "> <" + predicateDataset + "> " + nodeString+ "@"+language+".\n");
+                                if (!language.trim().equals("")) {
+                                    writer.write("<" + subjectDataset + "> <" + predicateDataset + "> " + nodeString + "@" + language + ".\n");
+                                } else if (!dataType.trim().equals("")) {
+                                    writer.write("<" + subjectDataset + "> <" + predicateDataset + "> " + nodeString + "^^<" + dataType + "> .\n");
+                                } else {
+                                    writer.write("<" + subjectDataset + "> <" + predicateDataset + "> " + nodeString + " .\n");
+                                }
                             }
-                            else if(!dataType.trim().equals(""))
-                            {
-                                writer.write("<" + subjectDataset + "> <" + predicateDataset + "> " + nodeString+ "^^<"+ dataType +"> .\n");
-                            }
-                            else
-                            {
-                                writer.write("<" + subjectDataset + "> <" + predicateDataset + "> " +nodeString+" .\n");
-                            }
-                        }
 
-                    }
-                    else {
-                        if(objectDataset.isURI())
-                        {
-                            writer.write("<" + subjectDataset + "> <" + predicateDataset + "> <" + objectDataset + "> .\n");
-                        }
-                        else if(objectDataset.isLiteral())
-                        {
-                            Utility utility=new Utility();
-                            String string =objectDataset.getLiteral().toString();
-                            System.out.println(string);
-                            Node nodeString=utility.createLiteral(string);
+                        } else {
+                            if (objectDataset.isURI()) {
+                                writer.write("<" + subjectDataset + "> <" + predicateDataset + "> <" + objectDataset + "> .\n");
+                            } else if (objectDataset.isLiteral()) {
+                                Utility utility = new Utility();
+                                String string = objectDataset.getLiteral().toString();
+                                System.out.println(string);
+                                Node nodeString = utility.createLiteral(string);
 //                            System.out.println(nodeString);
-                            String language=objectDataset.getLiteralLanguage();
-                            String dataType=objectDataset.getLiteralDatatypeURI();
+                                String language = objectDataset.getLiteralLanguage();
+                                String dataType = objectDataset.getLiteralDatatypeURI();
 
-                            if(!language.trim().equals(""))
-                            {
-                                writer.write("<" + subjectDataset + "> <" + predicateDataset + "> " + nodeString+ "@"+language+".\n");
-                            }
-                            else if(!dataType.trim().equals(""))
-                            {
-                                writer.write("<" + subjectDataset + "> <" + predicateDataset + "> " + nodeString+ "^^<"+ dataType +"> .\n");
-                            }
-                            else
-                            {
-                                writer.write("<" + subjectDataset + "> <" + predicateDataset + "> " +nodeString+" .\n");
-                            }
+                                if (!language.trim().equals("")) {
+                                    writer.write("<" + subjectDataset + "> <" + predicateDataset + "> " + nodeString + "@" + language + ".\n");
+                                } else if (!dataType.trim().equals("")) {
+                                    writer.write("<" + subjectDataset + "> <" + predicateDataset + "> " + nodeString + "^^<" + dataType + "> .\n");
+                                } else {
+                                    writer.write("<" + subjectDataset + "> <" + predicateDataset + "> " + nodeString + " .\n");
+                                }
 
+                            }
                         }
+                    }
+                    System.out.println("Finished");
+                    System.out.println("Number of substituted links: " + numberOfLinks);
+
+                    writer.close();
+                    System.exit(0);
+                } else if (typeOfDataset.equals("hdt")) {
+                    HDT hdt = HDTManager.mapIndexedHDT(datasetFile, null);
+                    int nSubjects = (int) hdt.getDictionary().getNsubjects();
+                    int[] numberOutgoing = new int[(int) hdt.getDictionary().getNsubjects() + 1];
+                    numberOutgoing[0] = 0;
+                    for (int id = 1; id <= nSubjects; id++) {
+                        IteratorTripleID iteratorTripleID = hdt.getTriples().search(new TripleID(id, 0, 0));
+                        System.out.println(iteratorTripleID.next());
                     }
                 }
-                System.out.println("Finished");
-                System.out.println("Number of substituted links: "+numberOfLinks);
-
-                writer.close();
-                System.exit(0);
-            }
-            else {
-                System.out.println("Wrong parameters");
             }
         }
         catch(Exception e)
