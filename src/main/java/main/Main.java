@@ -46,7 +46,6 @@ public class Main {
                         owlHashmap.put(objectOwl.toString(), subjectOwl.toString());
                     }
                 }
-                System.out.println(owls.length);
                 BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
                 PipedRDFIterator<Triple> iteratorDataset = Parser.parse(datasetFile);
                 while (iteratorDataset.hasNext())
@@ -55,20 +54,60 @@ public class Main {
                     Node subjectDataset = tripleDataset.getSubject();
                     Node objectDataset = tripleDataset.getObject();
                     Node predicateDataset = tripleDataset.getPredicate();
-                    System.out.println(objectDataset);
+//                    System.out.println(objectDataset);
                     if (owlHashmap.containsKey(subjectDataset.toString())) {
                         numberOfLinks++;
                         if(objectDataset.isURI())
+                        {
                             writer.write("<" + owlHashmap.get(subjectDataset.toString())+ "> <" + predicateDataset + "> <" + objectDataset+ "> .\n");
-                        else
-                            writer.write("<" + owlHashmap.get(subjectDataset.toString())+ "> <" + predicateDataset + "> " + objectDataset+ " .\n");
+                        }
+                        else if(objectDataset.isLiteral())
+                        {
+                            String string =objectDataset.getLiteral().getValue().toString();
+                            String language=objectDataset.getLiteralLanguage();
+                            String dataType=objectDataset.getLiteralDatatypeURI();
+
+
+                            if(!language.trim().equals(""))
+                            {
+                                writer.write("<" + subjectDataset + "> <" + predicateDataset + "> \"" + string+ "\"@"+language+".\n");
+                            }
+                            else if(!dataType.trim().equals(""))
+                            {
+                                writer.write("<" + subjectDataset + "> <" + predicateDataset + "> \"" + string+ "\"^^<"+ dataType +"> .\n");
+                            }
+                            else
+                            {
+                                writer.write("<" + subjectDataset + "> <" + predicateDataset + "> " +objectDataset+" .\n");
+                            }
+                        }
 
                     }
                     else {
                         if(objectDataset.isURI())
+                        {
                             writer.write("<" + subjectDataset + "> <" + predicateDataset + "> <" + objectDataset + "> .\n");
-                        else
-                            writer.write("<" + subjectDataset + "> <" + predicateDataset + "> " + objectDataset+ " .\n");
+                        }
+                        else if(objectDataset.isLiteral())
+                        {
+                            String string =objectDataset.getLiteral().getValue().toString();
+                            String language=objectDataset.getLiteralLanguage();
+                            String dataType=objectDataset.getLiteralDatatypeURI();
+
+                            if(!language.trim().equals(""))
+                            {
+                                writer.write("<" + subjectDataset + "> <" + predicateDataset + "> \"" + string+ "\"@"+language+".\n");
+                            }
+                            else if(!dataType.trim().equals(""))
+                            {
+                                writer.write("<" + subjectDataset + "> <" + predicateDataset + "> \"" + string+ "\"^^<"+ dataType +"> .\n");
+                            }
+                            else
+                            {
+                                writer.write("<" + subjectDataset + "> <" + predicateDataset + "> " +objectDataset+" .\n");
+                            }
+
+                        }
                     }
                 }
                 System.out.println("Finished");
