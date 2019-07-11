@@ -127,11 +127,11 @@ public class Main {
                 String dataType = objectDataset.getLiteralDatatypeURI();
 
                 if (!language.trim().equals("")) {
-                    writer.write("<" + subjectDataset + "> <" + predicateDataset + "> " + nodeString + "@" + language + ".\n");
+                    writer.write("<" + owlHashmap.get(subjectDataset.toString()) + "> <" + predicateDataset + "> " + nodeString + "@" + language + ".\n");
                 } else if (!dataType.trim().equals("")) {
-                    writer.write("<" + subjectDataset + "> <" + predicateDataset + "> " + nodeString + "^^<" + dataType + "> .\n");
+                    writer.write("<" + owlHashmap.get(subjectDataset.toString()) + "> <" + predicateDataset + "> " + nodeString + "^^<" + dataType + "> .\n");
                 } else {
-                    writer.write("<" + subjectDataset + "> <" + predicateDataset + "> " + nodeString + " .\n");
+                    writer.write("<" + owlHashmap.get(subjectDataset.toString()) + "> <" + predicateDataset + "> " + nodeString + " .\n");
                 }
             }
         }
