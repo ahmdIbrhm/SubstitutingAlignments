@@ -113,37 +113,36 @@ public class Main {
                     HDT hdt = HDTManager.mapIndexedHDT(datasetFile, null);
                     int nObjects= (int) hdt.getDictionary().getNobjects();
                     NodeDictionary nodeDictionary = new NodeDictionary(hdt.getDictionary());
-                    for(int i=0;i<nObjects;i++)
-                    {
-                        Node subjectDataset = nodeDictionary.getNode(i, TripleComponentRole.SUBJECT);
-                        Node predicateDataset = nodeDictionary.getNode(i, TripleComponentRole.PREDICATE);
-                        Node objectDataset = nodeDictionary.getNode(i, TripleComponentRole.OBJECT);
-                        System.out.println(subjectDataset);
-                        System.out.println(predicateDataset);
-                        System.out.println(objectDataset);
-                        System.out.println("-----------------");
-                        if (owlHashmap.containsKey(subjectDataset.toString())) {
-                            numberOfLinks++;
-                            if (objectDataset.isURI()) {
-                                writer.write("<" + owlHashmap.get(subjectDataset.toString()) + "> <" + predicateDataset + "> <" + objectDataset + "> .\n");
-                            } else if (objectDataset.isLiteral()) {
-                                Utility utility = new Utility();
-                                String string = objectDataset.getLiteral().getValue().toString();
-                                Node nodeString = utility.createLiteral(string);
-                                String language = objectDataset.getLiteralLanguage();
-                                String dataType = objectDataset.getLiteralDatatypeURI();
-
-                                if (!language.trim().equals("")) {
-                                    writer.write("<" + subjectDataset + "> <" + predicateDataset + "> " + nodeString + "@" + language + ".\n");
-                                } else if (!dataType.trim().equals("")) {
-                                    writer.write("<" + subjectDataset + "> <" + predicateDataset + "> " + nodeString + "^^<" + dataType + "> .\n");
-                                } else {
-                                    writer.write("<" + subjectDataset + "> <" + predicateDataset + "> " + nodeString + " .\n");
-                                }
-                            }
-                        }
-                    }
-
+//                    for(int i=0;i<nObjects;i++)
+//                    {
+//                        Node subjectDataset = nodeDictionary.getNode(i, TripleComponentRole.SUBJECT);
+//                        Node predicateDataset = nodeDictionary.getNode(i, TripleComponentRole.PREDICATE);
+//                        Node objectDataset = nodeDictionary.getNode(i, TripleComponentRole.OBJECT);
+//                        System.out.println(subjectDataset);
+//                        System.out.println(predicateDataset);
+//                        System.out.println(objectDataset);
+//                        System.out.println("-----------------");
+//                        if (owlHashmap.containsKey(subjectDataset.toString())) {
+//                            numberOfLinks++;
+//                            if (objectDataset.isURI()) {
+//                                writer.write("<" + owlHashmap.get(subjectDataset.toString()) + "> <" + predicateDataset + "> <" + objectDataset + "> .\n");
+//                            } else if (objectDataset.isLiteral()) {
+//                                Utility utility = new Utility();
+//                                String string = objectDataset.getLiteral().getValue().toString();
+//                                Node nodeString = utility.createLiteral(string);
+//                                String language = objectDataset.getLiteralLanguage();
+//                                String dataType = objectDataset.getLiteralDatatypeURI();
+//
+//                                if (!language.trim().equals("")) {
+//                                    writer.write("<" + subjectDataset + "> <" + predicateDataset + "> " + nodeString + "@" + language + ".\n");
+//                                } else if (!dataType.trim().equals("")) {
+//                                    writer.write("<" + subjectDataset + "> <" + predicateDataset + "> " + nodeString + "^^<" + dataType + "> .\n");
+//                                } else {
+//                                    writer.write("<" + subjectDataset + "> <" + predicateDataset + "> " + nodeString + " .\n");
+//                                }
+//                            }
+//                        }
+//                    }
                 }
             }
         }
