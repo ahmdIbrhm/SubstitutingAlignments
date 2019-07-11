@@ -58,7 +58,6 @@ public class Main {
                         Node subjectDataset = tripleDataset.getSubject();
                         Node objectDataset = tripleDataset.getObject();
                         Node predicateDataset = tripleDataset.getPredicate();
-//                    System.out.println(objectDataset);
                         if (owlHashmap.containsKey(subjectDataset.toString())) {
                             numberOfLinks++;
                             inHash(writer,subjectDataset,predicateDataset,objectDataset,owlHashmap);
@@ -68,8 +67,6 @@ public class Main {
                             notInHash(writer,subjectDataset,predicateDataset,objectDataset,owlHashmap);
                         }
                     }
-                    System.out.println("Finished");
-                    System.out.println("Number of substituted links: " + numberOfLinks);
                 }
                 else if (typeOfDataset.equals("hdt"))
                 {
@@ -78,7 +75,6 @@ public class Main {
                     int nObjects= (int) hdt.getDictionary().getNsubjects();
                     NodeDictionary nodeDictionary = new NodeDictionary(hdt.getDictionary());
                     IteratorTripleID iter = hdt.getTriples().search(new TripleID(0, 0, 0));
-                    System.out.println(iter.hasNext());
                     while (iter.hasNext())
                     {
                         TripleID tripleId=iter.next();
@@ -91,17 +87,17 @@ public class Main {
                         Node objectDataset = nodeDictionary.getNode(objectId, TripleComponentRole.OBJECT);
                         if (owlHashmap.containsKey(subjectDataset.toString()))
                         {
-                            System.out.println("found");
                             numberOfLinks++;
                             inHash(writer,subjectDataset,predicateDataset,objectDataset,owlHashmap);
                         }
                         else
                         {
-                            System.out.println("not found");
                             notInHash(writer,subjectDataset,predicateDataset,objectDataset,owlHashmap);
                         }
                     }
                 }
+                System.out.println("Finished");
+                System.out.println("Number of substituted links: " + numberOfLinks);
                 writer.close();
                 System.exit(0);
             }
@@ -152,7 +148,6 @@ public class Main {
                 Utility utility = new Utility();
                 String string = objectDataset.getLiteral().toString();
                 Node nodeString = utility.createLiteral(string);
-//                            System.out.println(nodeString);
                 String language = objectDataset.getLiteralLanguage();
                 String dataType = objectDataset.getLiteralDatatypeURI();
 
