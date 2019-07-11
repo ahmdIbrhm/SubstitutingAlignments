@@ -92,6 +92,10 @@ public class Utility {
             //System.out.println("This URI "+s+"contains illigal caracter \"");
             s = s.replace("'","");
         }
+        if(s.contains("\\"))
+        {
+            s=s.replace("\\","\\\\");
+        }
         return s;
     }
 }
