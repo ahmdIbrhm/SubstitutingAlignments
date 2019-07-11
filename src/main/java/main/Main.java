@@ -111,13 +111,20 @@ public class Main {
                 else if (typeOfDataset.equals("hdt")) {
                     System.out.println("HDT type");
                     HDT hdt = HDTManager.mapIndexedHDT(datasetFile, null);
-                    int nObjects= (int) hdt.getDictionary().getNobjects();
+                    int nObjects= (int) hdt.getDictionary().getNsubjects();
                     NodeDictionary nodeDictionary = new NodeDictionary(hdt.getDictionary());
-                    for(int i=1;i<nObjects;i++)
+                    IteratorTripleID iter = hdt.getTriples().search(new TripleID(0, 0, 0));
+                    while (iter.hasNext())
                     {
-                        Node subjectDataset = nodeDictionary.getNode(i, TripleComponentRole.SUBJECT);
-                        Node predicateDataset = nodeDictionary.getNode(i, TripleComponentRole.PREDICATE);
-                        Node objectDataset = nodeDictionary.getNode(i, TripleComponentRole.OBJECT);
+                        TripleID tripleId=iter.next();
+                        long subjectId=tripleId.getSubject();
+                        long predicateId=tripleId.getPredicate();
+                        long objectId=tripleId.getObject();
+
+                        Node subjectDataset = nodeDictionary.getNode(subjectId, TripleComponentRole.SUBJECT);
+                        Node predicateDataset = nodeDictionary.getNode(predicateId, TripleComponentRole.PREDICATE);
+                        Node objectDataset = nodeDictionary.getNode(objectId, TripleComponentRole.OBJECT);
+
                         System.out.println(subjectDataset);
                         System.out.println(predicateDataset);
                         System.out.println(objectDataset);
