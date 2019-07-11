@@ -70,16 +70,15 @@ public class Main {
                     }
                     System.out.println("Finished");
                     System.out.println("Number of substituted links: " + numberOfLinks);
-
-                    writer.close();
-                    System.exit(0);
                 }
-                else if (typeOfDataset.equals("hdt")) {
+                else if (typeOfDataset.equals("hdt"))
+                {
                     System.out.println("HDT type");
                     HDT hdt = HDTManager.mapIndexedHDT(datasetFile, null);
                     int nObjects= (int) hdt.getDictionary().getNsubjects();
                     NodeDictionary nodeDictionary = new NodeDictionary(hdt.getDictionary());
                     IteratorTripleID iter = hdt.getTriples().search(new TripleID(0, 0, 0));
+                    System.out.println(iter.hasNext());
                     while (iter.hasNext())
                     {
                         TripleID tripleId=iter.next();
@@ -92,21 +91,27 @@ public class Main {
                         Node objectDataset = nodeDictionary.getNode(objectId, TripleComponentRole.OBJECT);
                         if (owlHashmap.containsKey(subjectDataset.toString()))
                         {
+                            System.out.println("found");
                             numberOfLinks++;
                             inHash(writer,subjectDataset,predicateDataset,objectDataset,owlHashmap);
                         }
                         else
                         {
+                            System.out.println("not found");
                             notInHash(writer,subjectDataset,predicateDataset,objectDataset,owlHashmap);
                         }
                     }
                 }
+                writer.close();
+                System.exit(0);
             }
+
         }
         catch(Exception e)
         {
             e.printStackTrace();
         }
+
     }
     public static void inHash(BufferedWriter writer,Node subjectDataset,Node predicateDataset,Node objectDataset,HashMap<String,String> owlHashmap)
     {
@@ -139,9 +144,11 @@ public class Main {
     {
         try
         {
-            if (objectDataset.isURI()) {
+            if (objectDataset.isURI())
+            {
                 writer.write("<" + subjectDataset + "> <" + predicateDataset + "> <" + objectDataset + "> .\n");
-            } else if (objectDataset.isLiteral()) {
+            }
+            else if (objectDataset.isLiteral()) {
                 Utility utility = new Utility();
                 String string = objectDataset.getLiteral().toString();
                 Node nodeString = utility.createLiteral(string);
