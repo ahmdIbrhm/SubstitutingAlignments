@@ -14,6 +14,7 @@ import org.rdfhdt.hdt.hdt.HDTManager;
 import org.rdfhdt.hdt.triples.*;
 import org.rdfhdt.hdtjena.NodeDictionary;
 import parser.Parser;
+import utility.Utility;
 
 import java.io.*;
 import java.util.HashMap;
@@ -63,22 +64,23 @@ public class Main {
                         }
                         else if(objectDataset.isLiteral())
                         {
+                            Utility utility=new Utility();
                             String string =objectDataset.getLiteral().getValue().toString();
+                            Node nodeString=utility.createLiteral(string);
                             String language=objectDataset.getLiteralLanguage();
                             String dataType=objectDataset.getLiteralDatatypeURI();
 
-
                             if(!language.trim().equals(""))
                             {
-                                writer.write("<" + subjectDataset + "> <" + predicateDataset + "> \"" + string+ "\"@"+language+".\n");
+                                writer.write("<" + subjectDataset + "> <" + predicateDataset + "> \"" + nodeString+ "\"@"+language+".\n");
                             }
                             else if(!dataType.trim().equals(""))
                             {
-                                writer.write("<" + subjectDataset + "> <" + predicateDataset + "> \"" + string+ "\"^^<"+ dataType +"> .\n");
+                                writer.write("<" + subjectDataset + "> <" + predicateDataset + "> \"" + nodeString+ "\"^^<"+ dataType +"> .\n");
                             }
                             else
                             {
-                                writer.write("<" + subjectDataset + "> <" + predicateDataset + "> " +objectDataset+" .\n");
+                                writer.write("<" + subjectDataset + "> <" + predicateDataset + "> " +nodeString+" .\n");
                             }
                         }
 
@@ -90,21 +92,23 @@ public class Main {
                         }
                         else if(objectDataset.isLiteral())
                         {
+                            Utility utility=new Utility();
                             String string =objectDataset.getLiteral().getValue().toString();
+                            Node nodeString=utility.createLiteral(string);
                             String language=objectDataset.getLiteralLanguage();
                             String dataType=objectDataset.getLiteralDatatypeURI();
 
                             if(!language.trim().equals(""))
                             {
-                                writer.write("<" + subjectDataset + "> <" + predicateDataset + "> \"" + string+ "\"@"+language+".\n");
+                                writer.write("<" + subjectDataset + "> <" + predicateDataset + "> \"" + nodeString+ "\"@"+language+".\n");
                             }
                             else if(!dataType.trim().equals(""))
                             {
-                                writer.write("<" + subjectDataset + "> <" + predicateDataset + "> \"" + string+ "\"^^<"+ dataType +"> .\n");
+                                writer.write("<" + subjectDataset + "> <" + predicateDataset + "> \"" + nodeString+ "\"^^<"+ dataType +"> .\n");
                             }
                             else
                             {
-                                writer.write("<" + subjectDataset + "> <" + predicateDataset + "> " +objectDataset+" .\n");
+                                writer.write("<" + subjectDataset + "> <" + predicateDataset + "> " +nodeString+" .\n");
                             }
 
                         }
