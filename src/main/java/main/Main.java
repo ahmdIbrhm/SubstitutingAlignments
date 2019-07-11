@@ -61,45 +61,11 @@ public class Main {
 //                    System.out.println(objectDataset);
                         if (owlHashmap.containsKey(subjectDataset.toString())) {
                             numberOfLinks++;
-                            if (objectDataset.isURI()) {
-                                writer.write("<" + owlHashmap.get(subjectDataset.toString()) + "> <" + predicateDataset + "> <" + objectDataset + "> .\n");
-                            } else if (objectDataset.isLiteral()) {
-                                Utility utility = new Utility();
-                                String string = objectDataset.getLiteral().getValue().toString();
-                                Node nodeString = utility.createLiteral(string);
-                                String language = objectDataset.getLiteralLanguage();
-                                String dataType = objectDataset.getLiteralDatatypeURI();
+                            inHash(writer,subjectDataset,predicateDataset,objectDataset,owlHashmap);
 
-                                if (!language.trim().equals("")) {
-                                    writer.write("<" + subjectDataset + "> <" + predicateDataset + "> " + nodeString + "@" + language + ".\n");
-                                } else if (!dataType.trim().equals("")) {
-                                    writer.write("<" + subjectDataset + "> <" + predicateDataset + "> " + nodeString + "^^<" + dataType + "> .\n");
-                                } else {
-                                    writer.write("<" + subjectDataset + "> <" + predicateDataset + "> " + nodeString + " .\n");
-                                }
-                            }
-
-                        } else {
-                            if (objectDataset.isURI()) {
-                                writer.write("<" + subjectDataset + "> <" + predicateDataset + "> <" + objectDataset + "> .\n");
-                            } else if (objectDataset.isLiteral()) {
-                                Utility utility = new Utility();
-                                String string = objectDataset.getLiteral().toString();
-                                System.out.println(string);
-                                Node nodeString = utility.createLiteral(string);
-//                            System.out.println(nodeString);
-                                String language = objectDataset.getLiteralLanguage();
-                                String dataType = objectDataset.getLiteralDatatypeURI();
-
-                                if (!language.trim().equals("")) {
-                                    writer.write("<" + subjectDataset + "> <" + predicateDataset + "> " + nodeString + "@" + language + ".\n");
-                                } else if (!dataType.trim().equals("")) {
-                                    writer.write("<" + subjectDataset + "> <" + predicateDataset + "> " + nodeString + "^^<" + dataType + "> .\n");
-                                } else {
-                                    writer.write("<" + subjectDataset + "> <" + predicateDataset + "> " + nodeString + " .\n");
-                                }
-
-                            }
+                        }
+                        else {
+                            notInHash(writer,subjectDataset,predicateDataset,objectDataset,owlHashmap);
                         }
                     }
                     System.out.println("Finished");
@@ -124,36 +90,77 @@ public class Main {
                         Node subjectDataset = nodeDictionary.getNode(subjectId, TripleComponentRole.SUBJECT);
                         Node predicateDataset = nodeDictionary.getNode(predicateId, TripleComponentRole.PREDICATE);
                         Node objectDataset = nodeDictionary.getNode(objectId, TripleComponentRole.OBJECT);
-
-                        System.out.println(subjectDataset);
-                        System.out.println(predicateDataset);
-                        System.out.println(objectDataset);
-                        System.out.println("-----------------");
-                        if (owlHashmap.containsKey(subjectDataset.toString())) {
+                        if (owlHashmap.containsKey(subjectDataset.toString()))
+                        {
                             numberOfLinks++;
-                            if (objectDataset.isURI()) {
-                                writer.write("<" + owlHashmap.get(subjectDataset.toString()) + "> <" + predicateDataset + "> <" + objectDataset + "> .\n");
-                            } else if (objectDataset.isLiteral()) {
-                                Utility utility = new Utility();
-                                String string = objectDataset.getLiteral().getValue().toString();
-                                Node nodeString = utility.createLiteral(string);
-                                String language = objectDataset.getLiteralLanguage();
-                                String dataType = objectDataset.getLiteralDatatypeURI();
-
-                                if (!language.trim().equals("")) {
-                                    writer.write("<" + subjectDataset + "> <" + predicateDataset + "> " + nodeString + "@" + language + ".\n");
-                                } else if (!dataType.trim().equals("")) {
-                                    writer.write("<" + subjectDataset + "> <" + predicateDataset + "> " + nodeString + "^^<" + dataType + "> .\n");
-                                } else {
-                                    writer.write("<" + subjectDataset + "> <" + predicateDataset + "> " + nodeString + " .\n");
-                                }
-                            }
+                            inHash(writer,subjectDataset,predicateDataset,objectDataset,owlHashmap);
+                        }
+                        else
+                        {
+                            notInHash(writer,subjectDataset,predicateDataset,objectDataset,owlHashmap);
                         }
                     }
                 }
             }
         }
         catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+    public static void inHash(BufferedWriter writer,Node subjectDataset,Node predicateDataset,Node objectDataset,HashMap<String,String> owlHashmap)
+    {
+        try {
+
+            if (objectDataset.isURI()) {
+                writer.write("<" + owlHashmap.get(subjectDataset.toString()) + "> <" + predicateDataset + "> <" + objectDataset + "> .\n");
+            } else if (objectDataset.isLiteral()) {
+                Utility utility = new Utility();
+                String string = objectDataset.getLiteral().getValue().toString();
+                Node nodeString = utility.createLiteral(string);
+                String language = objectDataset.getLiteralLanguage();
+                String dataType = objectDataset.getLiteralDatatypeURI();
+
+                if (!language.trim().equals("")) {
+                    writer.write("<" + subjectDataset + "> <" + predicateDataset + "> " + nodeString + "@" + language + ".\n");
+                } else if (!dataType.trim().equals("")) {
+                    writer.write("<" + subjectDataset + "> <" + predicateDataset + "> " + nodeString + "^^<" + dataType + "> .\n");
+                } else {
+                    writer.write("<" + subjectDataset + "> <" + predicateDataset + "> " + nodeString + " .\n");
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+    public static void notInHash(BufferedWriter writer,Node subjectDataset,Node predicateDataset,Node objectDataset,HashMap<String,String> owlHashmap)
+    {
+        try
+        {
+            if (objectDataset.isURI()) {
+                writer.write("<" + subjectDataset + "> <" + predicateDataset + "> <" + objectDataset + "> .\n");
+            } else if (objectDataset.isLiteral()) {
+                Utility utility = new Utility();
+                String string = objectDataset.getLiteral().toString();
+                System.out.println(string);
+                Node nodeString = utility.createLiteral(string);
+//                            System.out.println(nodeString);
+                String language = objectDataset.getLiteralLanguage();
+                String dataType = objectDataset.getLiteralDatatypeURI();
+
+                if (!language.trim().equals("")) {
+                    writer.write("<" + subjectDataset + "> <" + predicateDataset + "> " + nodeString + "@" + language + ".\n");
+                } else if (!dataType.trim().equals("")) {
+                    writer.write("<" + subjectDataset + "> <" + predicateDataset + "> " + nodeString + "^^<" + dataType + "> .\n");
+                } else {
+                    writer.write("<" + subjectDataset + "> <" + predicateDataset + "> " + nodeString + " .\n");
+                }
+
+            }
+        }
+        catch (Exception e)
         {
             e.printStackTrace();
         }
