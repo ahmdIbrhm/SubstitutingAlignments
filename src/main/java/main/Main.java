@@ -72,11 +72,11 @@ public class Main {
 
                             if(!language.trim().equals(""))
                             {
-                                writer.write("<" + subjectDataset + "> <" + predicateDataset + "> \"" + nodeString+ "\"@"+language+".\n");
+                                writer.write("<" + subjectDataset + "> <" + predicateDataset + "> " + nodeString+ "@"+language+".\n");
                             }
                             else if(!dataType.trim().equals(""))
                             {
-                                writer.write("<" + subjectDataset + "> <" + predicateDataset + "> \"" + nodeString+ "\"^^<"+ dataType +"> .\n");
+                                writer.write("<" + subjectDataset + "> <" + predicateDataset + "> " + nodeString+ "^^<"+ dataType +"> .\n");
                             }
                             else
                             {
@@ -100,11 +100,11 @@ public class Main {
 
                             if(!language.trim().equals(""))
                             {
-                                writer.write("<" + subjectDataset + "> <" + predicateDataset + "> \"" + nodeString+ "\"@"+language+".\n");
+                                writer.write("<" + subjectDataset + "> <" + predicateDataset + "> " + nodeString+ "@"+language+".\n");
                             }
                             else if(!dataType.trim().equals(""))
                             {
-                                writer.write("<" + subjectDataset + "> <" + predicateDataset + "> \"" + nodeString+ "\"^^<"+ dataType +"> .\n");
+                                writer.write("<" + subjectDataset + "> <" + predicateDataset + "> " + nodeString+ "^^<"+ dataType +"> .\n");
                             }
                             else
                             {
