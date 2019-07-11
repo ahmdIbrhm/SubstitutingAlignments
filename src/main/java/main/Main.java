@@ -35,7 +35,8 @@ public class Main {
     public void run() throws Exception {
         try {
             int numberOfLinks = 0;
-            if (owlFiles != null && datasetFile != null && outputFile != null) {
+            if (owlFiles != null && datasetFile != null && outputFile != null)
+            {
                 String[] owls = owlFiles.split(",");
                 HashMap<String, String> owlHashmap = new HashMap<>();
                 for (int i = 0; i < owls.length; i++) {
@@ -49,7 +50,8 @@ public class Main {
                 }
                 BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
 
-                if (typeOfDataset.equals("ntriples")) {
+                if (typeOfDataset.equals("ntriples"))
+                {
                     PipedRDFIterator<Triple> iteratorDataset = Parser.parse(datasetFile);
                     while (iteratorDataset.hasNext()) {
                         Triple tripleDataset = iteratorDataset.next();
@@ -105,15 +107,17 @@ public class Main {
 
                     writer.close();
                     System.exit(0);
-                } else if (typeOfDataset.equals("hdt")) {
+                }
+                else if (typeOfDataset.equals("hdt")) {
+                    System.out.println("HDT type");
                     HDT hdt = HDTManager.mapIndexedHDT(datasetFile, null);
-                    int nSubjects = (int) hdt.getDictionary().getNsubjects();
-                    int[] numberOutgoing = new int[(int) hdt.getDictionary().getNsubjects() + 1];
-                    numberOutgoing[0] = 0;
-                    for (int id = 1; id <= nSubjects; id++) {
-                        IteratorTripleID iteratorTripleID = hdt.getTriples().search(new TripleID(id, 0, 0));
-                        System.out.println(iteratorTripleID.next());
+                    IteratorTripleString iteratorTripleString=hdt.search("","","");
+                    while(iteratorTripleString.hasNext())
+                    {
+                        TripleString triple=iteratorTripleString.next();
+                        System.out.println(triple);
                     }
+
                 }
             }
         }
