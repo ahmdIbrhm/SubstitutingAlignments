@@ -144,7 +144,6 @@ public class Main {
             } else if (objectDataset.isLiteral()) {
                 Utility utility = new Utility();
                 String string = objectDataset.getLiteral().toString();
-                System.out.println(string);
                 Node nodeString = utility.createLiteral(string);
 //                            System.out.println(nodeString);
                 String language = objectDataset.getLiteralLanguage();
