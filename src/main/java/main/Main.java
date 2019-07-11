@@ -111,11 +111,10 @@ public class Main {
                 else if (typeOfDataset.equals("hdt")) {
                     System.out.println("HDT type");
                     HDT hdt = HDTManager.mapIndexedHDT(datasetFile, null);
-                    IteratorTripleString iteratorTripleString=hdt.search("","","");
                     int nObjects= (int) hdt.getDictionary().getNobjects();
+                    NodeDictionary nodeDictionary = new NodeDictionary(hdt.getDictionary());
                     for(int i=0;i<nObjects;i++)
                     {
-                        NodeDictionary nodeDictionary = new NodeDictionary(hdt.getDictionary());
                         Node subjectDataset = nodeDictionary.getNode(i, TripleComponentRole.SUBJECT);
                         Node predicateDataset = nodeDictionary.getNode(i, TripleComponentRole.PREDICATE);
                         Node objectDataset = nodeDictionary.getNode(i, TripleComponentRole.OBJECT);
