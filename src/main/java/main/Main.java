@@ -113,7 +113,7 @@ public class Main {
                     HDT hdt = HDTManager.mapIndexedHDT(datasetFile, null);
                     int nObjects= (int) hdt.getDictionary().getNobjects();
                     NodeDictionary nodeDictionary = new NodeDictionary(hdt.getDictionary());
-                    for(int i=0;i<nObjects;i++)
+                    for(int i=1;i<nObjects;i++)
                     {
                         Node subjectDataset = nodeDictionary.getNode(i, TripleComponentRole.SUBJECT);
                         Node predicateDataset = nodeDictionary.getNode(i, TripleComponentRole.PREDICATE);
