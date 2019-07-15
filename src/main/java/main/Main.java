@@ -73,14 +73,12 @@ public class Main {
                         Node predicateDataset = nodeDictionary.getNode(predicateId, TripleComponentRole.PREDICATE);
                         Node objectDataset = nodeDictionary.getNode(objectId, TripleComponentRole.OBJECT);
                         System.out.println(subjectDataset.toString());
-                        System.out.println("qqqqqqqqqqqqqqqqqqq");
-                        IteratorTripleString iteratorOwl= owlHdt.search("", "", "http://musicbrainz.org/area/ef7129cf-01c2-4b4a-bff4-3bafb2c3e9e3#_");
+                        IteratorTripleString iteratorOwl= owlHdt.search("", "", subjectDataset.toString());
                         System.out.println("==========================");
                         if (iteratorOwl.hasNext())
                         {
                             numberOfLinks++;
                             TripleString triple = iteratorOwl.next();
-                            System.out.println(triple.toString());
                             inOwl(writer,predicateDataset,objectDataset,triple.getSubject().toString());
                         }
                         else
