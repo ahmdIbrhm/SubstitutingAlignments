@@ -74,7 +74,7 @@ public class Main {
                         Node objectDataset = nodeDictionary.getNode(objectId, TripleComponentRole.OBJECT);
                         System.out.println(subjectDataset.toString());
                         System.out.println("qqqqqqqqqqqqqqqqqqq");
-                        IteratorTripleString iteratorOwl= owlHdt.search("", "", subjectDataset.toString());
+                        IteratorTripleString iteratorOwl= owlHdt.search("", "", "http://musicbrainz.org/area/ef7129cf-01c2-4b4a-bff4-3bafb2c3e9e3#_");
                         System.out.println("==========================");
                         if (iteratorOwl.hasNext())
                         {
