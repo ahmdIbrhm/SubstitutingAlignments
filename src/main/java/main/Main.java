@@ -7,6 +7,7 @@ import org.apache.jena.graph.Node;
 import org.apache.jena.graph.Triple;
 import org.apache.jena.riot.lang.PipedRDFIterator;
 import org.rdfhdt.hdt.enums.TripleComponentRole;
+import org.rdfhdt.hdt.exceptions.NotFoundException;
 import org.rdfhdt.hdt.hdt.HDT;
 import org.rdfhdt.hdt.hdt.HDTManager;
 import org.rdfhdt.hdt.triples.*;
@@ -45,13 +46,18 @@ public class Main {
                         Node subjectDataset = tripleDataset.getSubject();
                         Node objectDataset = tripleDataset.getObject();
                         Node predicateDataset = tripleDataset.getPredicate();
-                        IteratorTripleString iteratorOwl= owlHdt.search("", "", subjectDataset.toString());
-                        if (iteratorOwl.hasNext())
+                        try
                         {
-                            numberOfLinks++;
-                            inOwl(writer,predicateDataset,objectDataset,iteratorOwl.next().getSubject().toString());
+                            IteratorTripleString iteratorOwl= owlHdt.search("", "", subjectDataset.toString());
+                            if (iteratorOwl.hasNext())
+                            {
+                                numberOfLinks++;
+                                TripleString triple = iteratorOwl.next();
+                                inOwl(writer,predicateDataset,objectDataset,triple.getSubject().toString());
+                            }
                         }
-                        else {
+                        catch (NotFoundException e)
+                        {
                             notInOWl(writer,subjectDataset,predicateDataset,objectDataset);
                         }
                     }
@@ -72,7 +78,6 @@ public class Main {
                         Node subjectDataset = nodeDictionary.getNode(subjectId, TripleComponentRole.SUBJECT);
                         Node predicateDataset = nodeDictionary.getNode(predicateId, TripleComponentRole.PREDICATE);
                         Node objectDataset = nodeDictionary.getNode(objectId, TripleComponentRole.OBJECT);
-                        System.out.println(subjectDataset.toString());
                         try
                         {
                             IteratorTripleString iteratorOwl= owlHdt.search("", "", subjectDataset.toString());
@@ -82,14 +87,10 @@ public class Main {
                                 TripleString triple = iteratorOwl.next();
                                 inOwl(writer,predicateDataset,objectDataset,triple.getSubject().toString());
                             }
-                            else
-                            {
-                                notInOWl(writer,subjectDataset,predicateDataset,objectDataset);
-                            }
                         }
-                        catch (Exception e)
+                        catch (NotFoundException e)
                         {
-                            System.out.println("hii");
+                            notInOWl(writer,subjectDataset,predicateDataset,objectDataset);
                         }
 
                     }
