@@ -29,7 +29,7 @@ public class Main {
     @Parameter(names={"--type", "-t"})
     private String typeOfDataset;
 
-    public void run() throws Exception {
+    public void run() {
         try {
             int numberOfLinks = 0;
             if (owlFile != null && datasetFile != null && outputFile != null)
@@ -45,14 +45,16 @@ public class Main {
                         Node subjectDataset = tripleDataset.getSubject();
                         Node objectDataset = tripleDataset.getObject();
                         Node predicateDataset = tripleDataset.getPredicate();
+                        System.out.println("qqqqqqqqq");
                         IteratorTripleString iteratorOwl= owlHdt.search("", "", subjectDataset.toString());
+                        System.out.println("==========================");
                         if (iteratorOwl.hasNext())
                         {
                             numberOfLinks++;
-                            inHash(writer,predicateDataset,objectDataset,iteratorOwl.next().getSubject().toString());
+                            inOwl(writer,predicateDataset,objectDataset,iteratorOwl.next().getSubject().toString());
                         }
                         else {
-                            notInHash(writer,subjectDataset,predicateDataset,objectDataset);
+                            notInOWl(writer,subjectDataset,predicateDataset,objectDataset);
                         }
                     }
                 }
@@ -73,18 +75,18 @@ public class Main {
                         Node predicateDataset = nodeDictionary.getNode(predicateId, TripleComponentRole.PREDICATE);
                         Node objectDataset = nodeDictionary.getNode(objectId, TripleComponentRole.OBJECT);
                         System.out.println(subjectDataset.toString());
-//                        IteratorTripleString iteratorOwl= owlHdt.search("", "", subjectDataset.toString());
-//                        if (iteratorOwl.hasNext())
-//                        {
-//                            numberOfLinks++;
-//                            TripleString triple = iteratorOwl.next();
-//                            System.out.println(triple.toString());
-//                            inHash(writer,predicateDataset,objectDataset,triple.getSubject().toString());
-//                        }
-//                        else
-//                        {
-//                            notInHash(writer,subjectDataset,predicateDataset,objectDataset);
-//                        }
+                        IteratorTripleString iteratorOwl= owlHdt.search("", "", subjectDataset.toString());
+                        if (iteratorOwl.hasNext())
+                        {
+                            numberOfLinks++;
+                            TripleString triple = iteratorOwl.next();
+                            System.out.println(triple.toString());
+                            inOwl(writer,predicateDataset,objectDataset,triple.getSubject().toString());
+                        }
+                        else
+                        {
+                            notInOWl(writer,subjectDataset,predicateDataset,objectDataset);
+                        }
                     }
                 }
                 System.out.println("Finished");
@@ -100,7 +102,7 @@ public class Main {
         }
 
     }
-    private static void inHash(BufferedWriter writer,Node predicateDataset,Node objectDataset,String newSubject)
+    private static void inOwl(BufferedWriter writer,Node predicateDataset,Node objectDataset,String newSubject)
     {
         try {
 
@@ -126,7 +128,7 @@ public class Main {
             e.printStackTrace();
         }
     }
-    private static void notInHash(BufferedWriter writer,Node subjectDataset,Node predicateDataset,Node objectDataset)
+    private static void notInOWl(BufferedWriter writer,Node subjectDataset,Node predicateDataset,Node objectDataset)
     {
         try
         {
