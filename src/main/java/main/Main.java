@@ -45,9 +45,7 @@ public class Main {
                         Node subjectDataset = tripleDataset.getSubject();
                         Node objectDataset = tripleDataset.getObject();
                         Node predicateDataset = tripleDataset.getPredicate();
-                        System.out.println("qqqqqqqqq");
                         IteratorTripleString iteratorOwl= owlHdt.search("", "", subjectDataset.toString());
-                        System.out.println("==========================");
                         if (iteratorOwl.hasNext())
                         {
                             numberOfLinks++;
@@ -75,7 +73,9 @@ public class Main {
                         Node predicateDataset = nodeDictionary.getNode(predicateId, TripleComponentRole.PREDICATE);
                         Node objectDataset = nodeDictionary.getNode(objectId, TripleComponentRole.OBJECT);
                         System.out.println(subjectDataset.toString());
+                        System.out.println("qqqqqqqqqqqqqqqqqqq");
                         IteratorTripleString iteratorOwl= owlHdt.search("", "", subjectDataset.toString());
+                        System.out.println("==========================");
                         if (iteratorOwl.hasNext())
                         {
                             numberOfLinks++;
