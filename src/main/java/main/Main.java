@@ -5,11 +5,9 @@ import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import org.apache.jena.graph.Node;
 import org.apache.jena.graph.Triple;
-import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.lang.PipedRDFIterator;
 import org.rdfhdt.hdt.enums.TripleComponentRole;
 import org.rdfhdt.hdt.hdt.HDT;
-import org.rdfhdt.hdt.hdt.HDTFactory;
 import org.rdfhdt.hdt.hdt.HDTManager;
 import org.rdfhdt.hdt.triples.*;
 import org.rdfhdt.hdtjena.NodeDictionary;
@@ -17,11 +15,10 @@ import parser.Parser;
 import utility.Utility;
 
 import java.io.*;
-import java.util.HashMap;
 
 public class Main {
-    @Parameter(names={"--owlFiles", "-owl"})
-    private String owlFiles;
+    @Parameter(names={"--owlFile", "-owl"})
+    private String owlFile;
 
     @Parameter(names={"--datasetFile", "-d"})
     private String datasetFile;
@@ -35,21 +32,10 @@ public class Main {
     public void run() throws Exception {
         try {
             int numberOfLinks = 0;
-            if (owlFiles != null && datasetFile != null && outputFile != null)
+            if (owlFile != null && datasetFile != null && outputFile != null)
             {
-                String[] owls = owlFiles.split(",");
-                HashMap<String, String> owlHashmap = new HashMap<>();
-                for (int i = 0; i < owls.length; i++) {
-                    PipedRDFIterator<Triple> iteratorOwl = Parser.parse(owls[i]);
-                    while (iteratorOwl.hasNext()) {
-                        Triple triple = iteratorOwl.next();
-                        Node subjectOwl = triple.getSubject();
-                        Node objectOwl = triple.getObject();
-                        owlHashmap.put(objectOwl.toString(), subjectOwl.toString());
-                    }
-                }
                 BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
-
+                HDT owlHdt=HDTManager.mapIndexedHDT(owlFile);
                 if (typeOfDataset.equals("ntriples"))
                 {
                     PipedRDFIterator<Triple> iteratorDataset = Parser.parse(datasetFile);
@@ -58,13 +44,14 @@ public class Main {
                         Node subjectDataset = tripleDataset.getSubject();
                         Node objectDataset = tripleDataset.getObject();
                         Node predicateDataset = tripleDataset.getPredicate();
-                        if (owlHashmap.containsKey(subjectDataset.toString())) {
+                        IteratorTripleString iteratorOwl= owlHdt.search("", "", subjectDataset.toString());
+                        if (iteratorOwl.hasNext())
+                        {
                             numberOfLinks++;
-                            inHash(writer,subjectDataset,predicateDataset,objectDataset,owlHashmap);
-
+                            inHash(writer,predicateDataset,objectDataset,iteratorOwl.next().getSubject().toString());
                         }
                         else {
-                            notInHash(writer,subjectDataset,predicateDataset,objectDataset,owlHashmap);
+                            notInHash(writer,subjectDataset,predicateDataset,objectDataset);
                         }
                     }
                 }
@@ -72,7 +59,6 @@ public class Main {
                 {
                     System.out.println("HDT type");
                     HDT hdt = HDTManager.mapIndexedHDT(datasetFile, null);
-                    int nObjects= (int) hdt.getDictionary().getNsubjects();
                     NodeDictionary nodeDictionary = new NodeDictionary(hdt.getDictionary());
                     IteratorTripleID iter = hdt.getTriples().search(new TripleID(0, 0, 0));
                     while (iter.hasNext())
@@ -85,14 +71,15 @@ public class Main {
                         Node subjectDataset = nodeDictionary.getNode(subjectId, TripleComponentRole.SUBJECT);
                         Node predicateDataset = nodeDictionary.getNode(predicateId, TripleComponentRole.PREDICATE);
                         Node objectDataset = nodeDictionary.getNode(objectId, TripleComponentRole.OBJECT);
-                        if (owlHashmap.containsKey(subjectDataset.toString()))
+                        IteratorTripleString iteratorOwl= owlHdt.search("", "", subjectDataset.toString());
+                        if (iteratorOwl.hasNext())
                         {
                             numberOfLinks++;
-                            inHash(writer,subjectDataset,predicateDataset,objectDataset,owlHashmap);
+                            inHash(writer,predicateDataset,objectDataset,iteratorOwl.next().getSubject().toString());
                         }
                         else
                         {
-                            notInHash(writer,subjectDataset,predicateDataset,objectDataset,owlHashmap);
+                            notInHash(writer,subjectDataset,predicateDataset,objectDataset);
                         }
                     }
                 }
@@ -109,25 +96,24 @@ public class Main {
         }
 
     }
-    public static void inHash(BufferedWriter writer,Node subjectDataset,Node predicateDataset,Node objectDataset,HashMap<String,String> owlHashmap)
+    private static void inHash(BufferedWriter writer,Node predicateDataset,Node objectDataset,String newSubject)
     {
         try {
 
             if (objectDataset.isURI()) {
-                writer.write("<" + owlHashmap.get(subjectDataset.toString()) + "> <" + predicateDataset + "> <" + objectDataset + "> .\n");
+                writer.write("<" + newSubject + "> <" + predicateDataset + "> <" + objectDataset + "> .\n");
             } else if (objectDataset.isLiteral()) {
-                Utility utility = new Utility();
                 String string = objectDataset.getLiteral().getValue().toString();
-                Node nodeString = utility.createLiteral(string);
+                Node nodeString = Utility.createLiteral(string);
                 String language = objectDataset.getLiteralLanguage();
                 String dataType = objectDataset.getLiteralDatatypeURI();
 
                 if (!language.trim().equals("")) {
-                    writer.write("<" + owlHashmap.get(subjectDataset.toString()) + "> <" + predicateDataset + "> " + nodeString + "@" + language + ".\n");
+                    writer.write("<" + newSubject + "> <" + predicateDataset + "> " + nodeString + "@" + language + ".\n");
                 } else if (!dataType.trim().equals("")) {
-                    writer.write("<" + owlHashmap.get(subjectDataset.toString()) + "> <" + predicateDataset + "> " + nodeString + "^^<" + dataType + "> .\n");
+                    writer.write("<" + newSubject + "> <" + predicateDataset + "> " + nodeString + "^^<" + dataType + "> .\n");
                 } else {
-                    writer.write("<" + owlHashmap.get(subjectDataset.toString()) + "> <" + predicateDataset + "> " + nodeString + " .\n");
+                    writer.write("<" + newSubject + "> <" + predicateDataset + "> " + nodeString + " .\n");
                 }
             }
         }
@@ -136,7 +122,7 @@ public class Main {
             e.printStackTrace();
         }
     }
-    public static void notInHash(BufferedWriter writer,Node subjectDataset,Node predicateDataset,Node objectDataset,HashMap<String,String> owlHashmap)
+    private static void notInHash(BufferedWriter writer,Node subjectDataset,Node predicateDataset,Node objectDataset)
     {
         try
         {
@@ -145,9 +131,8 @@ public class Main {
                 writer.write("<" + subjectDataset + "> <" + predicateDataset + "> <" + objectDataset + "> .\n");
             }
             else if (objectDataset.isLiteral()) {
-                Utility utility = new Utility();
                 String string = objectDataset.getLiteral().toString();
-                Node nodeString = utility.createLiteral(string);
+                Node nodeString = Utility.createLiteral(string);
                 String language = objectDataset.getLiteralLanguage();
                 String dataType = objectDataset.getLiteralDatatypeURI();
 
