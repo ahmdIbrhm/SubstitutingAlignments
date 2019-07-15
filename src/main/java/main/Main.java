@@ -72,18 +72,19 @@ public class Main {
                         Node subjectDataset = nodeDictionary.getNode(subjectId, TripleComponentRole.SUBJECT);
                         Node predicateDataset = nodeDictionary.getNode(predicateId, TripleComponentRole.PREDICATE);
                         Node objectDataset = nodeDictionary.getNode(objectId, TripleComponentRole.OBJECT);
-                        IteratorTripleString iteratorOwl= owlHdt.search("", "", subjectDataset.toString());
-                        if (iteratorOwl.hasNext())
-                        {
-                            numberOfLinks++;
-                            TripleString triple = iteratorOwl.next();
-                            System.out.println(triple.toString());
-                            inHash(writer,predicateDataset,objectDataset,triple.getSubject().toString());
-                        }
-                        else
-                        {
-                            notInHash(writer,subjectDataset,predicateDataset,objectDataset);
-                        }
+                        System.out.println(subjectDataset.toString());
+//                        IteratorTripleString iteratorOwl= owlHdt.search("", "", subjectDataset.toString());
+//                        if (iteratorOwl.hasNext())
+//                        {
+//                            numberOfLinks++;
+//                            TripleString triple = iteratorOwl.next();
+//                            System.out.println(triple.toString());
+//                            inHash(writer,predicateDataset,objectDataset,triple.getSubject().toString());
+//                        }
+//                        else
+//                        {
+//                            notInHash(writer,subjectDataset,predicateDataset,objectDataset);
+//                        }
                     }
                 }
                 System.out.println("Finished");
