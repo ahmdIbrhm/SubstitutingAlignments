@@ -39,7 +39,8 @@ public class Main {
                 if (typeOfDataset.equals("ntriples"))
                 {
                     PipedRDFIterator<Triple> iteratorDataset = Parser.parse(datasetFile);
-                    while (iteratorDataset.hasNext()) {
+                    while (iteratorDataset.hasNext())
+                    {
                         Triple tripleDataset = iteratorDataset.next();
                         Node subjectDataset = tripleDataset.getSubject();
                         Node objectDataset = tripleDataset.getObject();
@@ -75,7 +76,9 @@ public class Main {
                         if (iteratorOwl.hasNext())
                         {
                             numberOfLinks++;
-                            inHash(writer,predicateDataset,objectDataset,iteratorOwl.next().getSubject().toString());
+                            TripleString triple = iteratorOwl.next();
+                            System.out.println(triple.toString());
+                            inHash(writer,predicateDataset,objectDataset,triple.getSubject().toString());
                         }
                         else
                         {
